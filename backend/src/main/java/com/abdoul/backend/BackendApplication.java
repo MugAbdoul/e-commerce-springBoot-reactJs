@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.abdoul.backend.entities.User;
-import com.abdoul.backend.entities.Role;
+import com.abdoul.backend.entities.enums.Role;
 import com.abdoul.backend.repository.UserRepository;
 
 @SpringBootApplication

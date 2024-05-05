@@ -1,4 +1,4 @@
-package com.abdoul.backend.entities;
+package com.abdoul.backend.entities.enums;
 
 public enum OrderStatus {
     PENDING,

@@ -1,19 +1,26 @@
 package com.abdoul.backend.entities;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import com.abdoul.backend.entities.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails{
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class User implements UserDetails {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -22,6 +29,7 @@ public class User implements UserDetails{
     private UUID userId;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Serialize only
     private String password;
 
     @Column(nullable = false)
@@ -44,18 +52,24 @@ public class User implements UserDetails{
     @JoinColumn(name = "default_address_id", referencedColumnName = "user_address_id", nullable = true)
     private UserAddress defaultAddress;
 
-
     @Column(name = "profile_image")
     private String profileImage;
 
     @OneToMany(mappedBy = "user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Serialize only
     private List<Token> tokens;
     
     @OneToMany(mappedBy = "user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Serialize only
     private List<Order> orders;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Serialize only
     private List<Notification> notifications;
+
+    public static long getSerialversionuid() {
+        return serialVersionUID;
+    }
 
     public UUID getUserId() {
         return userId;
@@ -71,6 +85,22 @@ public class User implements UserDetails{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getEmail() {
@@ -113,9 +143,38 @@ public class User implements UserDetails{
         this.profileImage = profileImage;
     }
 
+    public List<Token> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(List<Token> tokens) {
+        this.tokens = tokens;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
     }
 
     @Override
@@ -137,34 +196,4 @@ public class User implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    public List<Token> getTokens() {
-        return tokens;
-    }
-
-    public void setTokens(List<Token> tokens) {
-        this.tokens = tokens;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-    
 }

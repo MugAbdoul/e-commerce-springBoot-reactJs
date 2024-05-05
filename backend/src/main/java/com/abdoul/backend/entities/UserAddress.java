@@ -16,6 +16,10 @@ public class UserAddress {
     @Column(name = "user_address_id", updatable = false, nullable = false)
     private UUID id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Column(nullable = false)
     private String street;
 
@@ -78,4 +82,14 @@ public class UserAddress {
     public void setCountry(String country) {
         this.country = country;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    
 }

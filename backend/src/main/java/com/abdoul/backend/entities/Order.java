@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.abdoul.backend.entities.enums.OrderStatus;
+
 import jakarta.persistence.*;
 
 @Entity

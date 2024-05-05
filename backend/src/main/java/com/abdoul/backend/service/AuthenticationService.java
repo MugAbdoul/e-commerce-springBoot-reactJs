@@ -5,10 +5,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.abdoul.backend.entities.AuthenticationResponse;
-import com.abdoul.backend.entities.Role;
 import com.abdoul.backend.entities.Token;
 import com.abdoul.backend.entities.User;
+import com.abdoul.backend.entities.others.AuthenticationResponse;
 import com.abdoul.backend.repository.TokenRepository;
 import com.abdoul.backend.repository.UserRepository;
 

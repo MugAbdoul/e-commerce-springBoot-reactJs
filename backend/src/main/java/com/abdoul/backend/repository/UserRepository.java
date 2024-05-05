@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.abdoul.backend.entities.Role;
 import com.abdoul.backend.entities.User;
+import com.abdoul.backend.entities.enums.Role;
 
 public interface UserRepository  extends JpaRepository<User, UUID>{
     Optional<User> findByEmail(String email);

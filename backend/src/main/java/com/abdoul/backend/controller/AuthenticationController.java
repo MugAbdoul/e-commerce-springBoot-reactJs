@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.abdoul.backend.entities.AuthenticationResponse;
 import com.abdoul.backend.entities.User;
+import com.abdoul.backend.entities.others.AuthenticationResponse;
 import com.abdoul.backend.service.AuthenticationService;
 
 @RestController

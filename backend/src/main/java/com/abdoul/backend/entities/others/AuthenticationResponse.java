@@ -1,4 +1,4 @@
-package com.abdoul.backend.entities;
+package com.abdoul.backend.entities.others;
 
 public class AuthenticationResponse {
     private String token;
