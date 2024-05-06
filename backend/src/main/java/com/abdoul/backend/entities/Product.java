@@ -5,10 +5,14 @@ import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.abdoul.backend.entities.others.ProductSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "products")
+@JsonSerialize(using = ProductSerializer.class)
 public class Product {
 
     @Id
