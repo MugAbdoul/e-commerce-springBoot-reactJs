@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.abdoul.backend.entities.User;
 import com.abdoul.backend.entities.UserAddress;
 import com.abdoul.backend.repository.UserAddressRepository;
 
@@ -24,8 +25,8 @@ public class UserAddressService {
         return userAddressRepository.findById(id);
     }
 
-    public List<UserAddress> findByUserId(UUID userId) {
-        return userAddressRepository.findByUser_Id(userId);
+    public List<UserAddress> findByUser(User user) {
+        return userAddressRepository.findByUser(user);
     }
 
     public UserAddress save(UserAddress userAddress) {

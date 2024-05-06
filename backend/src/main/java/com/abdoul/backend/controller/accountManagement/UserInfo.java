@@ -1,12 +1,14 @@
 package com.abdoul.backend.controller.accountManagement;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.abdoul.backend.entities.User;
+import com.abdoul.backend.entities.UserAddress;
 import com.abdoul.backend.entities.others.ChangePasswordRequest;
 import com.abdoul.backend.entities.others.UserUpdateRequest;
+import com.abdoul.backend.service.UserAddressService;
 import com.abdoul.backend.service.UserService;
 
 @RestController
@@ -23,9 +27,11 @@ import com.abdoul.backend.service.UserService;
 public class UserInfo {
 
     private final UserService userService;
+    private final UserAddressService userAddressService;
 
-    public UserInfo(UserService userService) {
+    public UserInfo(UserService userService, UserAddressService userAddressService) {
         this.userService = userService;
+        this.userAddressService = userAddressService;
     }
 
     @GetMapping("")
@@ -105,6 +111,32 @@ public class UserInfo {
             return ResponseEntity.ok("Password changed successfully.");
         } else {
             return ResponseEntity.notFound().build(); 
+        }
+    }
+
+    @PatchMapping("/setAdress/{id}")
+    public ResponseEntity<User> setDefaultAdress(Authentication authentication, @PathVariable UUID id) {
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+
+        Optional<User> optionalUser = userService.findByEmail(email);
+        if(optionalUser.isPresent()){
+
+            User user = optionalUser.get();
+
+            Optional<UserAddress> userAddress = userAddressService.findById(id);
+
+            if(userAddress.isPresent()){
+                user.setDefaultAddress(userAddress.get());
+                userService.save(user);
+                return ResponseEntity.ok(user);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+
+        }else{
+            return ResponseEntity.notFound().build();
         }
     }
 }

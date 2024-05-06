@@ -34,10 +34,21 @@ public class UserAddressController {
         return userAddress.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<UserAddress>> getUserAddressesByUserId(@PathVariable UUID userId) {
-        List<UserAddress> userAddresses = userAddressService.findByUserId(userId);
-        return ResponseEntity.ok(userAddresses);
+    @GetMapping("")
+    public ResponseEntity<List<UserAddress>> getUserAddresses(Authentication authentication) {
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+        Optional<User> optionalUser = userService.findByEmail(email);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            List<UserAddress> userAddresses = userAddressService.findByUser(user);
+            return ResponseEntity.ok(userAddresses);
+        } else {
+            return ResponseEntity.notFound().build(); 
+        }
+        
     }
 
     @PostMapping("")
@@ -58,18 +69,32 @@ public class UserAddressController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserAddress> updateUserAddress(@PathVariable UUID id, @RequestBody UserAddress userAddress) {
-        if (!userAddressService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<UserAddress> updateUserAddress(Authentication authentication, @PathVariable UUID id, @RequestBody UserAddress userAddress) {
+        
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+        Optional<User> optionalUser = userService.findByEmail(email);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            userAddress.setUser(user);
+            userAddress.setId(id);
+            UserAddress createdUserAddress = userAddressService.save(userAddress);
+            return ResponseEntity.ok(createdUserAddress);
+        } else {
+            return ResponseEntity.notFound().build(); 
         }
-        userAddress.setId(id);
-        UserAddress updatedUserAddress = userAddressService.save(userAddress);
-        return ResponseEntity.ok(updatedUserAddress);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserAddress(@PathVariable UUID id) {
-        userAddressService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteUserAddress(@PathVariable UUID id) {
+        Optional<UserAddress> userAddress = userAddressService.findById(id);
+        if(userAddress.isPresent()){
+            userAddressService.deleteById(id);
+            return ResponseEntity.ok("Address deleted successfully");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 }
