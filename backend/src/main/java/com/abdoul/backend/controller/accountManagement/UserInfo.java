@@ -1,8 +1,10 @@
 package com.abdoul.backend.controller.accountManagement;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +21,7 @@ import com.abdoul.backend.entities.User;
 import com.abdoul.backend.entities.UserAddress;
 import com.abdoul.backend.entities.others.ChangePasswordRequest;
 import com.abdoul.backend.entities.others.UserUpdateRequest;
+import com.abdoul.backend.service.FileStorageService;
 import com.abdoul.backend.service.UserAddressService;
 import com.abdoul.backend.service.UserService;
 
@@ -28,10 +31,12 @@ public class UserInfo {
 
     private final UserService userService;
     private final UserAddressService userAddressService;
+    private final FileStorageService fileStorageService;
 
-    public UserInfo(UserService userService, UserAddressService userAddressService) {
+    public UserInfo(UserService userService, UserAddressService userAddressService, FileStorageService fileStorageService) {
         this.userService = userService;
         this.userAddressService = userAddressService;
+        this.fileStorageService = fileStorageService;
     }
 
     @GetMapping("")
@@ -69,7 +74,6 @@ public class UserInfo {
         }
     }
 
-    // Endpoint for updating profileImage
     @PatchMapping("/update-profile-image")
     public ResponseEntity<User> updateProfileImage(Authentication authentication, @RequestParam("image") MultipartFile image) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -79,10 +83,16 @@ public class UserInfo {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            // Save the image file and update profileImage field
-            // This part depends on how you handle file uploads and storage
-            userService.save(user);
-            return ResponseEntity.ok(user);
+
+            try {
+                String imageUrl = fileStorageService.storeFile(image); // Store the uploaded image
+                user.setProfileImage(imageUrl); // Update the profile image URL in the user object
+                userService.save(user); // Save the user with the updated profile image URL
+                return ResponseEntity.ok(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Handle error if file storage fails
+            }
         } else {
             return ResponseEntity.notFound().build(); 
         }
