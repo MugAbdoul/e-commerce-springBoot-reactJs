@@ -1,5 +1,6 @@
 package com.abdoul.backend.entities;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -20,9 +21,6 @@ public class Product {
     private String name;
 
     @Column(nullable = false)
-    private String image;
-
-    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
@@ -32,11 +30,14 @@ public class Product {
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "category_id")
     private ProductCategory category;
 
-    @Column(name = "default_image", nullable = false)
-    private String defaultImage;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductImage> images;
+
+    @Column(nullable = false)
+    private boolean available;
 
     public UUID getId() {
         return id;
@@ -52,14 +53,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public String getDescription() {
@@ -94,12 +87,21 @@ public class Product {
         this.category = category;
     }
 
-    public String getDefaultImage() {
-        return defaultImage;
+    public List<ProductImage> getImages() {
+        return images;
     }
 
-    public void setDefaultImage(String defaultImage) {
-        this.defaultImage = defaultImage;
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
     }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+    
 
 }

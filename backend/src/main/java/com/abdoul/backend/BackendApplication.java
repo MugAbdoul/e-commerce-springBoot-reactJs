@@ -31,7 +31,7 @@ public class BackendApplication implements CommandLineRunner {
 			user.setFirstname("Admin");
 			user.setLastname("Manager");
 			user.setPhoneNumber("0789479289");
-			user.setPassword(new BCryptPasswordEncoder().encode("Admin12@"));
+			user.setPassword(new BCryptPasswordEncoder().encode("mugisha12@"));
 			userRepository.save(user);
 		}
 	}
