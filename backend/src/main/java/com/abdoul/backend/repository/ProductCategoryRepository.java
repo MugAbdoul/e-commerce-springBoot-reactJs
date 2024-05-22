@@ -9,5 +9,5 @@ import com.abdoul.backend.entities.ProductCategory;
 
 @Repository
 public interface ProductCategoryRepository extends JpaRepository<ProductCategory, UUID> {
-    // You can add custom query methods here if needed
+   
 }

@@ -15,6 +15,7 @@ import com.abdoul.backend.entities.UserAddress;
 import com.abdoul.backend.service.UserAddressService;
 import com.abdoul.backend.service.UserService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/account/address")
 public class UserAddressController {

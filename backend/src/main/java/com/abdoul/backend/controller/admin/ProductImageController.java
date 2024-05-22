@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.abdoul.backend.entities.Product;
-import com.abdoul.backend.entities.ProductCategory;
 import com.abdoul.backend.entities.ProductImage;
 import com.abdoul.backend.service.FileStorageService;
 import com.abdoul.backend.service.ProductImageService;
 import com.abdoul.backend.service.ProductService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/admin/product-images")
 public class ProductImageController {

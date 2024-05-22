@@ -14,6 +14,7 @@ import com.abdoul.backend.entities.ProductCategory;
 import com.abdoul.backend.service.FileStorageService;
 import com.abdoul.backend.service.ProductCategoryService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/admin/product-categories")
 public class ProductCategoryController {

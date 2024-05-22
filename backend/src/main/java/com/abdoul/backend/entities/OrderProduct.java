@@ -27,6 +27,8 @@ public class OrderProduct {
     @Column(nullable = false)
     private int quantity;
 
+    // Getters and setters
+
     public UUID getId() {
         return id;
     }

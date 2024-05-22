@@ -16,4 +16,13 @@ public class AuthenticationResponse {
     public String getMessage() {
         return message;
     }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+    
 }
