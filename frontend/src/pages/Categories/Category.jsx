@@ -103,7 +103,7 @@ export default function CategoryPage() {
       setSnackbarMessage('Category deleted successfully!');
       setOpenSnackbar(true);
     } catch (error) {
-      setSnackbarMessage('Failed to delete category. Please try again.');
+      setSnackbarMessage('Category could not be deleted.because is being used by product as foreign key.');
       setOpenSnackbar(true);
     }
   };
