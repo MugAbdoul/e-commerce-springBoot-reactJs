@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.time.LocalDate;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/user/orders")
 public class OrderController {

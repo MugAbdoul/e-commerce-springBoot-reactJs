@@ -18,22 +18,28 @@ public class OrderSerializer extends JsonSerializer<Order> {
         jsonGenerator.writeStringField("status", order.getStatus().name());
         jsonGenerator.writeNumberField("amount", order.getAmount());
 
-        jsonGenerator.writeArrayFieldStart("orderProducts");
-        for (OrderProduct orderProduct : order.getOrderProducts()) {
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField("id", orderProduct.getId().toString());
-            jsonGenerator.writeStringField("productId", orderProduct.getProduct().getId().toString());
-            jsonGenerator.writeStringField("productName", orderProduct.getProduct().getName());
-            jsonGenerator.writeNumberField("price", orderProduct.getProduct().getPrice());
-            if (!orderProduct.getProduct().getImages().isEmpty()) {
-                jsonGenerator.writeStringField("image", orderProduct.getProduct().getImages().get(0).getUrl());
-            } else {
-                jsonGenerator.writeStringField("image", ""); // or handle it as you prefer
+        if(order.getOrderProducts() != null){
+            jsonGenerator.writeArrayFieldStart("orderProducts");
+            for (OrderProduct orderProduct : order.getOrderProducts()) {
+                jsonGenerator.writeStartObject();
+                jsonGenerator.writeStringField("id", orderProduct.getId().toString());
+                jsonGenerator.writeStringField("productId", orderProduct.getProduct().getId().toString());
+                jsonGenerator.writeStringField("productName", orderProduct.getProduct().getName());
+                jsonGenerator.writeNumberField("price", orderProduct.getProduct().getPrice());
+                if (!orderProduct.getProduct().getImages().isEmpty()) {
+                    jsonGenerator.writeStringField("image", orderProduct.getProduct().getImages().get(0).getUrl());
+                } else {
+                    jsonGenerator.writeStringField("image", ""); // or handle it as you prefer
+                }
+                jsonGenerator.writeNumberField("quantity", orderProduct.getQuantity());
+                jsonGenerator.writeEndObject();
             }
-            jsonGenerator.writeNumberField("quantity", orderProduct.getQuantity());
-            jsonGenerator.writeEndObject();
+            jsonGenerator.writeEndArray();
+        }else{
+            jsonGenerator.writeArrayFieldStart("orderProducts");
+            jsonGenerator.writeEndArray();
         }
-        jsonGenerator.writeEndArray();
+        
         jsonGenerator.writeObjectFieldStart("user");
         jsonGenerator.writeStringField("id", order.getUser().getUserId().toString());
         jsonGenerator.writeStringField("firstname", order.getUser().getFirstname());

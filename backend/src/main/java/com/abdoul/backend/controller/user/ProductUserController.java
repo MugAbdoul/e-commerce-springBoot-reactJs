@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.abdoul.backend.entities.Product;
 import com.abdoul.backend.service.ProductService;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/user/products")
 public class ProductUserController {

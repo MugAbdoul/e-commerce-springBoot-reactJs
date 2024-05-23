@@ -10,6 +10,12 @@ import NotFound from "./pages/NotFound";
 import ProductUpdatePage from "./pages/Products/ProductUpdatePage"
 import AccessDenied from "./pages/AccessDenied";
 import ProtectedAdminRoute from "./utils/ProtectedAdminRoute";
+import ProtectedUserRoute from "./utils/ProtectedUserRoute";
+import UserHome from './pages/User/Home';
+import CartPage from './pages/User/Cart';
+import UserOrders from './pages/User/Orders';
+import Address from './pages/User/AddressManagement';
+import ProductDetails from './pages/User/ProductDetails';
 
 function App() {
   return (
@@ -18,7 +24,46 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/dashboard/logout" element={<LogoutPage />} />
-        <Route path="/" element={<LoginPage />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedUserRoute>
+              <UserHome />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedUserRoute>
+              <UserOrders />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/address"
+          element={
+            <ProtectedUserRoute>
+              <Address />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/product/:id"
+          element={
+            <ProtectedUserRoute>
+              <ProductDetails />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedUserRoute>
+              <CartPage />
+            </ProtectedUserRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={

@@ -6,3 +6,7 @@ target/
 build/
 *.jar
 *.war
+
+
+*.jpg
+*.png

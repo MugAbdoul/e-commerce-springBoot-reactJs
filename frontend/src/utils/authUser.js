@@ -10,8 +10,7 @@ export const isUser = async () => {
   if (!token) return false;
 
   try {
-    const response = await axiosInstance.post('/account',
-    {
+    const response = await axiosInstance.get('/account',{
       headers: {
         Authorization: `Bearer ${token}`,
       },
