@@ -22,18 +22,17 @@ public class BackendApplication implements CommandLineRunner {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 
-	public void run(String... args){
+	public void run(String... args) {
 		List<User> adminAccount = userRepository.findByRole(Role.ADMIN);
-		if(null == adminAccount) {
+		if (adminAccount.isEmpty()) {
 			User user = new User();
 			user.setRole(Role.ADMIN);
 			user.setEmail("admin@gmail.com");
 			user.setFirstname("Admin");
 			user.setLastname("Manager");
 			user.setPhoneNumber("0789479289");
-			user.setPassword(new BCryptPasswordEncoder().encode("mugisha12@"));
+			user.setPassword(new BCryptPasswordEncoder().encode("admin"));
 			userRepository.save(user);
 		}
 	}
-
 }

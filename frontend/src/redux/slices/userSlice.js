@@ -27,10 +27,19 @@ const userSlice = createSlice({
     clearUser: (state) => {
       return initialState;
     },
+    updateUserProfile: (state, action) => {
+      const { firstname, lastname, phoneNumber } = action.payload;
+      state.firstname = firstname;
+      state.lastname = lastname;
+      state.phoneNumber = phoneNumber;
+    },
+    updateUserProfileImage: (state, action) => {
+      state.profileImage = action.payload;
+    },
   },
 });
 
-export const { setUser, clearUser } = userSlice.actions;
+export const { setUser, clearUser, updateUserProfile, updateUserProfileImage } = userSlice.actions;
 
 export const selectUser = (state) => state.user;
 

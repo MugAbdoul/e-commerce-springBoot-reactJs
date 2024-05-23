@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.abdoul.backend.entities.ProductCategory;
+import com.abdoul.backend.entities.others.ProductCategoryUpdateRequest;
 import com.abdoul.backend.repository.ProductCategoryRepository;
 
 @Service
@@ -29,12 +30,29 @@ public class ProductCategoryService {
         return productCategoryRepository.save(productCategory);
     }
 
-    public ProductCategory updateProductCategory(UUID id, ProductCategory productCategory) {
+    // public ProductCategory updateProductCategory(UUID id, ProductCategory productCategory) {
+    //     if (!productCategoryRepository.existsById(id)) {
+    //         return null;
+    //     }
+    //     productCategory.setId(id);
+    //     return productCategoryRepository.save(productCategory);
+    // }
+
+    public ProductCategory updateProductCategory(UUID id, ProductCategoryUpdateRequest updateDTO) {
         if (!productCategoryRepository.existsById(id)) {
             return null;
         }
-        productCategory.setId(id);
-        return productCategoryRepository.save(productCategory);
+        ProductCategory existingCategory = productCategoryRepository.findById(id).orElse(null);
+        if (existingCategory != null) {
+            if (updateDTO.getName() != null) {
+                existingCategory.setName(updateDTO.getName());
+            }
+            if (updateDTO.getImage() != null) {
+                existingCategory.setImage(updateDTO.getImage());
+            }
+            return productCategoryRepository.save(existingCategory);
+        }
+        return null;
     }
 
     public boolean deleteProductCategory(UUID id) {

@@ -2,18 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAddresses, addAddress, updateAddress, removeAddress } from '../../redux/userSlice/addressSlice';
-import { Box, Typography, Container, CircularProgress, Button, Grid, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Snackbar } from '@mui/material';
+import { Box, Typography, Container, CircularProgress, Button, Grid, IconButton, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Snackbar, Paper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import UserHeader from './UserHeader';
-import axiosInstance from '../../utils/axiosInstance'; // Adjust the path to your axios instance
 
-const AddressCard = styled(Box)(({ theme }) => ({
-  border: '1px solid #ccc',
+const AddressCard = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
   marginBottom: theme.spacing(2),
+  boxShadow: theme.shadows[3],
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
 }));
 
 const AddressManagement = () => {
@@ -76,24 +78,12 @@ const AddressManagement = () => {
       .catch(() => setSnackbar({ open: true, message: 'Failed to delete address' }));
   };
 
-  const handleSetAsDefault = (id) => {
-    const token = localStorage.getItem('token');
-    axiosInstance.patch(`/account/setAdress/${id}`,{
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      .then(() => setSnackbar({ open: true, message: 'Address set as default successfully' }))
-      .catch(() => setSnackbar({ open: true, message: 'Failed to set address as default' }));
-  };
-
   const handleCloseSnackbar = () => {
     setSnackbar({ open: false, message: '' });
   };
 
   if (loading) {
-    return <CircularProgress />;
+    return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
   }
 
   if (error) {
@@ -112,20 +102,21 @@ const AddressManagement = () => {
           {addresses.map((address) => (
             <Grid item xs={12} key={address.id}>
               <AddressCard>
-                <Typography variant="body1"><strong>Street:</strong> {address.street}</Typography>
-                <Typography variant="body1"><strong>City:</strong> {address.city}</Typography>
-                <Typography variant="body1"><strong>State:</strong> {address.state}</Typography>
-                <Typography variant="body1"><strong>Zip Code:</strong> {address.zipCode}</Typography>
-                <Typography variant="body1"><strong>Country:</strong> {address.country}</Typography>
-                <IconButton color="primary" onClick={() => handleOpen(address)}>
-                  <EditIcon />
-                </IconButton>
-                <IconButton color="secondary" onClick={() => handleDelete(address.id)}>
-                  <DeleteIcon />
-                </IconButton>
-                <Button variant="contained" onClick={() => handleSetAsDefault(address.id)}>
-                  Set as Default
-                </Button>
+                <Box>
+                  <Typography variant="body1"><strong>Street:</strong> {address.street}</Typography>
+                  <Typography variant="body1"><strong>City:</strong> {address.city}</Typography>
+                  <Typography variant="body1"><strong>State:</strong> {address.state}</Typography>
+                  <Typography variant="body1"><strong>Zip Code:</strong> {address.zipCode}</Typography>
+                  <Typography variant="body1"><strong>Country:</strong> {address.country}</Typography>
+                </Box>
+                <Box>
+                  <IconButton color="primary" onClick={() => handleOpen(address)}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton color="secondary" onClick={() => handleDelete(address.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </Box>
               </AddressCard>
             </Grid>
           ))}

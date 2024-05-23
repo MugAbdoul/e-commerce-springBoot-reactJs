@@ -16,6 +16,9 @@ import CartPage from './pages/User/Cart';
 import UserOrders from './pages/User/Orders';
 import Address from './pages/User/AddressManagement';
 import ProductDetails from './pages/User/ProductDetails';
+import Checkout from './pages/User/Checkout/Checkout';
+import ProfilePage from './pages/User/ProfilePage';
+import AdminProfilePage from './pages/UserAdmin/AdminProfilePage';
 
 function App() {
   return (
@@ -24,6 +27,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/dashboard/logout" element={<LogoutPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
         <Route
           path="/"
           element={
@@ -41,10 +45,26 @@ function App() {
           }
         />
         <Route
+          path="/checkout"
+          element={
+            <ProtectedUserRoute>
+              <Checkout />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
           path="/address"
           element={
             <ProtectedUserRoute>
               <Address />
+            </ProtectedUserRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedUserRoute>
+              <ProfilePage />
             </ProtectedUserRoute>
           }
         />
@@ -101,6 +121,14 @@ function App() {
           element={
             <ProtectedAdminRoute>
               <OrderPage />
+            </ProtectedAdminRoute>
+          }
+        />
+        <Route
+          path="/dashboard/profile"
+          element={
+            <ProtectedAdminRoute>
+              <AdminProfilePage />
             </ProtectedAdminRoute>
           }
         />

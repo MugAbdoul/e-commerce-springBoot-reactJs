@@ -1,5 +1,6 @@
 package com.abdoul.backend.entities;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -21,6 +22,9 @@ public class ProductCategory {
 
     @Column(nullable = false)
     private String image;
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Product> products;
 
     public UUID getId() {
         return id;
@@ -46,5 +50,12 @@ public class ProductCategory {
         this.image = image;
     }
 
-    
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
 }

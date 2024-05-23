@@ -1,7 +1,7 @@
 // src/components/CartDropdown.js
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Box, Card, CardContent, CardMedia, Typography, IconButton, Popover, Snackbar, Button } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Typography, IconButton, Popover, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
@@ -10,15 +10,15 @@ import { removeFromCart, updateCartQuantity, fetchCart } from '../../redux/userS
 
 const CartCard = styled(Card)(({ theme }) => ({
   display: 'flex',
-  flexDirection: 'column',
   justifyContent: 'space-between',
-  height: '100%',
-  marginBottom: theme.spacing(2),
+  alignItems: 'center',
+  padding: theme.spacing(1),
+  marginBottom: theme.spacing(1),
 }));
 
 const CartDropdown = ({ anchorEl, handleClose }) => {
   const dispatch = useDispatch();
-  const { cart, loading, error, snackbar } = useSelector(state => state.cart);
+  const { cart, loading, error } = useSelector(state => state.cart);
 
   useEffect(() => {
     dispatch(fetchCart());
@@ -52,41 +52,62 @@ const CartDropdown = ({ anchorEl, handleClose }) => {
           vertical: 'top',
           horizontal: 'center',
         }}
+        PaperProps={{
+          style: {
+            maxHeight: '400px', // Set maximum height for the dropdown
+            overflow: 'auto', // Enable scrolling
+          },
+        }}
       >
-        <Box sx={{ p: 2, width: 300 }}>
+        <Box sx={{ p: 2, width: 300, position: 'relative' }}>
           {loading && <Typography>Loading...</Typography>}
           {error && <Typography color="error">{error}</Typography>}
-          {cart.items.map((item) => (
-            <CartCard key={item.product.id}>
-              <CardMedia
-                component="img"
-                alt={item.product.name}
-                height="100"
-                image={item.product.images.length > 0 ? `http://localhost:8081/images/${item.product.images[0].url}` : 'https://via.placeholder.com/150'}
-              />
-              <CardContent>
-                <Typography variant="h6">{item.product.name}</Typography>
-                <Typography variant="body2" color="textSecondary">
-                  ${item.product.price} x {item.quantity}
-                </Typography>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
-                  <IconButton color="primary" onClick={() => handleUpdateQuantity(item, item.quantity + 1)}>
-                    <AddIcon />
-                  </IconButton>
-                  <Typography>{item.quantity}</Typography>
-                  <IconButton color="primary" onClick={() => handleUpdateQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>
-                    <RemoveIcon />
-                  </IconButton>
-                  <IconButton color="secondary" onClick={() => handleRemoveFromCart(item)}>
-                    <DeleteIcon />
-                  </IconButton>
+          {cart.items.length > 0 ? (
+            cart.items.map((item) => (
+              <CartCard key={item.product.id}>
+                <CardMedia
+                  component="img"
+                  alt={item.product.name}
+                  sx={{ width: 80, height: 80, objectFit: 'cover', marginRight: 2 }}
+                  image={item.product.images.length > 0 ? `http://localhost:8081/images/${item.product.images[0].url}` : 'https://via.placeholder.com/150'}
+                />
+                <Box sx={{ flex: 1 }}>
+                  <Typography variant="h6" noWrap>{item.product.name}</Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    ${item.product.price} x {item.quantity}
+                  </Typography>
+                  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 1 }}>
+                    <IconButton color="primary" onClick={() => handleUpdateQuantity(item, item.quantity + 1)}>
+                      <AddIcon />
+                    </IconButton>
+                    <Typography>{item.quantity}</Typography>
+                    <IconButton color="primary" onClick={() => handleUpdateQuantity(item, item.quantity - 1)} disabled={item.quantity <= 1}>
+                      <RemoveIcon />
+                    </IconButton>
+                    <IconButton color="secondary" onClick={() => handleRemoveFromCart(item)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Box>
                 </Box>
-              </CardContent>
-            </CartCard>
-          ))}
-          <Button variant="contained" color="primary" fullWidth onClick={handleClose}>
-            Checkout
-          </Button>
+              </CartCard>
+            ))
+          ) : (
+            <Typography variant="body2" color="textSecondary" align="center">
+              Your cart is empty.
+            </Typography>
+          )}
+          <Box sx={{ position: 'sticky', bottom: 0, background: 'white', pt: 2 }}>
+            <Button
+              variant="contained"
+              href="/checkout"
+              color="primary"
+              fullWidth
+              onClick={handleClose}
+              disabled={cart.items.length === 0} // Disable button if cart is empty
+            >
+              Checkout
+            </Button>
+          </Box>
         </Box>
       </Popover>
     </>

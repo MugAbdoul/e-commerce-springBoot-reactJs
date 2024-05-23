@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.abdoul.backend.entities.ProductCategory;
+import com.abdoul.backend.entities.others.ProductCategoryUpdateRequest;
 import com.abdoul.backend.service.FileStorageService;
 import com.abdoul.backend.service.ProductCategoryService;
 
@@ -62,7 +63,7 @@ public class ProductCategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductCategory> updateProductCategory(@PathVariable UUID id, @RequestBody ProductCategory productCategory) {
+    public ResponseEntity<ProductCategory> updateProductCategory(@PathVariable UUID id, @RequestBody ProductCategoryUpdateRequest productCategory) {
         ProductCategory updatedProductCategory = productCategoryService.updateProductCategory(id, productCategory);
         if (updatedProductCategory == null) {
             return ResponseEntity.notFound().build();

@@ -49,6 +49,12 @@ const OrderPage = () => {
     }
   };
 
+  const formatAddress = (address) => {
+    if (!address) return '';
+    const { street, city, state, zipcode, country } = address;
+    return `${street}, ${city}, ${state}, ${zipcode}, ${country}`;
+  };
+
   const CollapsibleTableRow = ({ order }) => {
     const [open, setOpen] = useState(false);
 
@@ -87,11 +93,9 @@ const OrderPage = () => {
                 <Typography variant="h6" gutterBottom component="div">
                   User Details
                 </Typography>
-                <Typography>
-                  Name: {order.user.firstname} {order.user.lastname}
-                </Typography>
+                <Typography>Name: {order.user.firstname} {order.user.lastname}</Typography>
                 <Typography>Phone: {order.user.phonenumber}</Typography>
-                <Typography>Address: {order.user.address}</Typography>
+                <Typography>Address: {formatAddress(order.user.address)}</Typography>
                 <Box mt={2}>
                   <Typography variant="h6" gutterBottom component="div">
                     Order Products
@@ -162,36 +166,36 @@ const OrderPage = () => {
       >
         <Grid container spacing={3} sx={{ maxWidth: 1000 }}>
           <Grid item xs={12}>
-          <Box sx={{ p: 3 }}>
-        <Typography variant="h4" mb={3}>
-          Orders
-        </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>ID</TableCell>
-                <TableCell>Order Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Amount</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order) => (
-                <CollapsibleTableRow key={order.id} order={order} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Snackbar
-          open={openSnackbar}
-          autoHideDuration={6000}
-          onClose={() => setOpenSnackbar(false)}
-          message={snackbarMessage}
-        />
-      </Box>
-        </Grid>
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h4" mb={3}>
+                Orders
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell>ID</TableCell>
+                      <TableCell>Order Date</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Amount</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {orders.map((order) => (
+                      <CollapsibleTableRow key={order.id} order={order} />
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <Snackbar
+                open={openSnackbar}
+                autoHideDuration={6000}
+                onClose={() => setOpenSnackbar(false)}
+                message={snackbarMessage}
+              />
+            </Box>
+          </Grid>
         </Grid>
       </Box>
     </>

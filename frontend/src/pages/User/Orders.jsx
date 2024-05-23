@@ -1,5 +1,7 @@
+// src/components/OrderPage.js
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 import { fetchOrders, selectOrders, selectLoading, selectError } from '../../redux/userSlice/orderSlice';
 import {
   Box,
@@ -27,12 +29,23 @@ const OrderPage = () => {
   const orders = useSelector(selectOrders);
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
+  const location = useLocation();
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const message = params.get('message');
+    if (message) {
+      setSnackbarMessage(message);
+      setOpenSnackbar(true);
+    }
+  }, [location]);
 
   const CollapsibleTableRow = ({ order }) => {
     const [open, setOpen] = useState(false);
@@ -124,32 +137,38 @@ const OrderPage = () => {
       >
         <Grid container spacing={3} sx={{ maxWidth: 1000 }}>
           <Grid item xs={12}>
-          <Box sx={{ p: 3 }}>
-        <Typography variant="h4" mb={3}>
-          Orders
-        </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                <TableCell>ID</TableCell>
-                <TableCell>Order Date</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Amount</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {orders.map((order) => (
-                <CollapsibleTableRow key={order.id} order={order} />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h4" mb={3}>
+                Orders
+              </Typography>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell>ID</TableCell>
+                      <TableCell>Order Date</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell>Amount</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {orders.map((order) => (
+                      <CollapsibleTableRow key={order.id} order={order} />
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Box>
+          </Grid>
         </Grid>
-        </Grid>
       </Box>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+      />
     </Container>
   );
 };

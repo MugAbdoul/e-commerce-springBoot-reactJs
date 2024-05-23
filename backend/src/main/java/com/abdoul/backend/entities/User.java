@@ -63,10 +63,6 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Serialize only
     private List<Order> orders;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // Serialize only
-    private List<Notification> notifications;
-
     public static long getSerialversionuid() {
         return serialVersionUID;
     }
@@ -157,14 +153,6 @@ public class User implements UserDetails {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
-    }
-
-    public List<Notification> getNotifications() {
-        return notifications;
-    }
-
-    public void setNotifications(List<Notification> notifications) {
-        this.notifications = notifications;
     }
 
     @Override

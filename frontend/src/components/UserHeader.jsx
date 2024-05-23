@@ -3,6 +3,17 @@ import { AppBar, Toolbar, IconButton, Typography, Badge, Menu, MenuItem, Box, Bu
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import { selectUser } from '../redux/slices/userSlice';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+
+
+const settings = [
+  { name: 'Profile', path: '/dashboard/profile' },
+  { name: 'Logout', path: '/dashboard/logout' },
+];
 
 const CartCard = ({ product }) => (
   <Card sx={{ display: 'flex', marginBottom: 0, width: '100%' }}>
@@ -35,6 +46,9 @@ const Header = () => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const isCartOpen = Boolean(cartAnchorEl);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const user = useSelector(selectUser);
+  const navigate = useNavigate();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -59,6 +73,20 @@ const Header = () => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  // ---------------------
+
+  const handleOpenUserMenu = (event) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleNavigate = (path) => {
+    navigate(path);
   };
 
   const productsInCart = [
@@ -217,6 +245,35 @@ const Header = () => {
             >
               <MoreIcon />
             </IconButton>
+          </Box>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt={user.firstname} src={`http://localhost:8081/images/${user.profileImage}`} />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting.name} onClick={() => handleNavigate(setting.path)}>
+                  <Typography textAlign="center">{setting.name}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
         </Toolbar>
       </AppBar>
